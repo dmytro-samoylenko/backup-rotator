@@ -1,0 +1,65 @@
+# Backup Rotator Configuration
+
+# Global Settings
+telegram:
+  bot_token: "YOUR_BOT_TOKEN_HERE"
+  chat_id: "YOUR_CHAT_ID_HERE"
+
+backups:
+  base_path: "/backups"
+
+disk:
+  # Alert when free space percentage drops below this threshold
+  threshold_percent: 10
+  # Clear alert when free space rises above threshold + margin
+  margin_percent: 5
+
+logging:
+  directory: "logs"
+  level: "INFO"  # DEBUG, INFO, WARNING, ERROR, CRITICAL
+
+weekly_report:
+  # Day of week: monday, tuesday, wednesday, thursday, friday, saturday, sunday
+  day: "monday"
+  # Time in HH:MM format (24-hour)
+  time: "09:00"
+
+# Datetime format patterns to try when parsing backup filenames (in priority order)
+datetime_formats:
+  - "%Y-%m-%d_%H:%M:%S"
+  - "%Y%m%d_%H%M%S"
+  - "%Y-%m-%d_%H-%M-%S"
+  - "%Y-%m-%d"
+
+# Default retention policy (Grandfather-Father-Son)
+default_retention:
+  daily: 7    # Keep last 7 daily backups
+  weekly: 4   # Keep last 4 weekly backups (Mondays)
+  monthly: 12 # Keep last 12 monthly backups (first day of month)
+
+# Per-Project Configuration
+projects:
+  - id: "1"
+    name: "Project One"
+    # Regex pattern to match backup files
+    filename_pattern: '^\d{4}-\d{2}-\d{2}_\d{2}:\d{2}:\d{2}\.sql\.gz\.gpg$'
+    # Expected backup interval in hours (for stale backup detection)
+    expected_interval_hours: 24
+    # Minimum file size in MB (files smaller than this will be flagged)
+    min_file_size_mb: 1
+    # Optional: Override default retention policy for this project
+    # retention:
+    #   daily: 14
+    #   weekly: 8
+    #   monthly: 24
+
+  # Example of another project with custom settings
+  # - id: "2"
+  #   name: "Project Two"
+  #   filename_pattern: '^\d{8}_\d{6}\.tar\.gz\.gpg$'
+  #   expected_interval_hours: 12
+  #   min_file_size_mb: 5
+  #   retention:
+  #     daily: 10
+  #     weekly: 6
+  #     monthly: 18

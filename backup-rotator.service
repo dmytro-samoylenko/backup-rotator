@@ -1,0 +1,28 @@
+[Unit]
+Description=Backup Rotator - Automated backup file rotation with Telegram notifications
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=root
+Group=root
+WorkingDirectory=/opt/backup-rotator
+ExecStart=/opt/backup-rotator/.venv/bin/python /opt/backup-rotator/hello.py --config /opt/backup-rotator/config.yaml --execute
+Restart=always
+RestartSec=60
+
+# Security hardening
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/backups /opt/backup-rotator/logs /opt/backup-rotator/state.json
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=backup-rotator
+
+[Install]
+WantedBy=multi-user.target
