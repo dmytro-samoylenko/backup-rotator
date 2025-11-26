@@ -9,16 +9,9 @@ User=root
 Group=root
 WorkingDirectory=/opt/backup-rotator
 Environment="PATH=/opt/backup-rotator/.venv/bin:/usr/local/bin:/usr/bin:/bin"
-ExecStart=/opt/backup-rotator/.venv/bin/python /opt/backup-rotator/run.py --config /opt/backup-rotator/config.yaml --execute
+ExecStart=/opt/backup-rotator/.venv/bin/python /opt/backup-rotator/run.py --config /opt/backup-rotator/config.yaml.local --execute
 Restart=always
 RestartSec=60
-
-# Security hardening
-NoNewPrivileges=true
-PrivateTmp=true
-ProtectSystem=strict
-ProtectHome=true
-ReadWritePaths=/backups /opt/backup-rotator/logs /opt/backup-rotator/state.json
 
 # Logging
 StandardOutput=journal
