@@ -13,7 +13,7 @@ from dateutil import parser as dateutil_parser
 logger = logging.getLogger(__name__)
 
 
-@dataclass
+@dataclass(frozen=True)
 class BackupFile:
     """Represents a backup file."""
 
@@ -22,6 +22,16 @@ class BackupFile:
     timestamp: datetime
     size_bytes: int
     project_id: str
+
+    def __hash__(self):
+        """Make BackupFile hashable using path as unique identifier."""
+        return hash(str(self.path))
+
+    def __eq__(self, other):
+        """Compare BackupFile instances by path."""
+        if not isinstance(other, BackupFile):
+            return False
+        return self.path == other.path
 
     @property
     def size_mb(self) -> float:
