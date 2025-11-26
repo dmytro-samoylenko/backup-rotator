@@ -182,16 +182,36 @@ class TelegramNotifier:
         except Exception as e:
             logger.error(f"Failed to send deletion failure alert: {e}")
 
-    async def send_weekly_summary(self, stats: list[BackupStats]) -> None:
+    async def send_weekly_summary(
+        self,
+        stats: list[BackupStats],
+        free_percent: Optional[float] = None,
+        free_gb: Optional[float] = None,
+        used_gb: Optional[float] = None,
+        total_gb: Optional[float] = None,
+    ) -> None:
         """Send weekly summary report.
 
         Args:
             stats: List of backup statistics for each project
+            free_percent: Free disk space percentage
+            free_gb: Free disk space in GB
+            used_gb: Used disk space in GB
+            total_gb: Total disk space in GB
         """
         if not stats:
             text = "📊 *WEEKLY BACKUP SUMMARY*\n\nNo projects configured."
         else:
             text = "📊 *WEEKLY BACKUP SUMMARY*\n\n"
+
+            # Add disk usage information if provided
+            if free_percent is not None and total_gb is not None:
+                text += "💾 *Disk Usage (/backups)*\n"
+                text += f"├ Total: {total_gb:.2f} GB\n"
+                text += f"├ Used: {used_gb:.2f} GB ({100 - free_percent:.1f}%)\n"
+                text += f"└ Free: {free_gb:.2f} GB ({free_percent:.1f}%)\n\n"
+
+            text += "*Projects:*\n\n"
 
             for stat in stats:
                 text += f"*{stat.project_name}* (ID: {stat.project_id})\n"

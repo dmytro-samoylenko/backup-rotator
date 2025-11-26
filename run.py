@@ -199,8 +199,19 @@ class BackupRotator:
                     str(e), f"Weekly summary - project {project_config.id}"
                 )
 
-        # Send summary
-        await self.notifier.send_weekly_summary(all_stats)
+        # Get current disk usage
+        try:
+            free_percent, free_gb, used_gb, total_gb = (
+                self.disk_monitor.get_disk_usage()
+            )
+        except Exception as e:
+            logger.error(f"Failed to get disk usage for weekly summary: {e}")
+            free_percent = free_gb = used_gb = total_gb = None
+
+        # Send summary with disk usage
+        await self.notifier.send_weekly_summary(
+            all_stats, free_percent, free_gb, used_gb, total_gb
+        )
 
         # Mark report as sent and reset deletion counters
         self.state_manager.mark_weekly_report_sent()
