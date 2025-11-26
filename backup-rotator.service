@@ -8,7 +8,7 @@ Type=simple
 User=root
 Group=root
 WorkingDirectory=/opt/backup-rotator
-ExecStart=/opt/backup-rotator/.venv/bin/python /opt/backup-rotator/hello.py --config /opt/backup-rotator/config.yaml --execute
+ExecStart=/opt/backup-rotator/.venv/bin/python /opt/backup-rotator/run.py --config /opt/backup-rotator/config.yaml --execute
 Restart=always
 RestartSec=60
 

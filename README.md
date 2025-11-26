@@ -60,25 +60,25 @@ nano config.yaml.local
 ### Dry-Run Mode (Default)
 Test the rotation logic without deleting files:
 ```bash
-python hello.py --config config.yaml.local
+python run.py --config config.yaml.local
 ```
 
 ### Execute Mode
 Actually delete backup files according to retention policy:
 ```bash
-python hello.py --config config.yaml.local --execute
+python run.py --config config.yaml.local --execute
 ```
 
 ### Run Once
 Run rotation once and exit (no scheduler):
 ```bash
-python hello.py --config config.yaml.local --once
+python run.py --config config.yaml.local --once
 ```
 
 ### Send Weekly Report Now
 Immediately send a weekly summary:
 ```bash
-python hello.py --config config.yaml.local --send-weekly-now
+python run.py --config config.yaml.local --send-weekly-now
 ```
 
 ### Command-Line Options
@@ -190,7 +190,7 @@ sudo journalctl -u backup-rotator -f
 Add to crontab:
 ```cron
 # Run backup rotation daily at 3 AM
-0 3 * * * cd /opt/backup-rotator && .venv/bin/python hello.py --config /etc/backup-rotator/config.yaml --execute --once
+0 3 * * * cd /opt/backup-rotator && .venv/bin/python run.py --config /etc/backup-rotator/config.yaml --execute --once
 ```
 
 ## Troubleshooting
@@ -202,7 +202,7 @@ tail -f logs/backup-rotator.log
 
 ### Test configuration
 ```bash
-python hello.py --config config.yaml.local --once
+python run.py --config config.yaml.local --once
 ```
 
 ### Validate regex patterns
