@@ -20,19 +20,28 @@ Automated backup file rotation system with Telegram notifications using Grandfat
 
 ## Installation
 
+### Prerequisites
+
+Install [uv](https://github.com/astral-sh/uv) (fast Python package installer):
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+### Install Backup Rotator
+
 1. Clone the repository:
 ```bash
 git clone <repository-url>
 cd backup-rotator
 ```
 
-2. Install dependencies:
+2. Create virtual environment and install dependencies:
 ```bash
-pip install -e .
-```
+uv venv
+source .venv/bin/activate  # On Linux/Mac
+# or
+.venv\Scripts\activate  # On Windows
 
-Or using uv:
-```bash
 uv pip install -e .
 ```
 
@@ -154,10 +163,13 @@ Logs are written to `logs/backup-rotator.log` with:
 sudo mkdir -p /opt/backup-rotator
 sudo cp -r /path/to/backup-rotator/* /opt/backup-rotator/
 
+# Install uv if not already installed
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
 # Create virtual environment and install dependencies
 cd /opt/backup-rotator
-python3 -m venv .venv
-.venv/bin/pip install -e .
+uv venv
+uv pip install -e .
 
 # Configure
 sudo cp config.yaml config.yaml.local
@@ -190,7 +202,7 @@ sudo journalctl -u backup-rotator -f
 Add to crontab:
 ```cron
 # Run backup rotation daily at 3 AM
-0 3 * * * cd /opt/backup-rotator && .venv/bin/python run.py --config /etc/backup-rotator/config.yaml --execute --once
+0 3 * * * cd /opt/backup-rotator && source .venv/bin/activate && python run.py --config /etc/backup-rotator/config.yaml --execute --once
 ```
 
 ## Troubleshooting

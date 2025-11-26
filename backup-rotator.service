@@ -8,6 +8,7 @@ Type=simple
 User=root
 Group=root
 WorkingDirectory=/opt/backup-rotator
+Environment="PATH=/opt/backup-rotator/.venv/bin:/usr/local/bin:/usr/bin:/bin"
 ExecStart=/opt/backup-rotator/.venv/bin/python /opt/backup-rotator/run.py --config /opt/backup-rotator/config.yaml --execute
 Restart=always
 RestartSec=60
