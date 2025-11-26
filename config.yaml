@@ -18,6 +18,13 @@ logging:
   directory: "logs"
   level: "INFO"  # DEBUG, INFO, WARNING, ERROR, CRITICAL
 
+rotation_schedule:
+  # How often to run backup rotation
+  # Options: hourly, daily, weekly, or custom time (HH:MM format)
+  frequency: "daily"  # hourly, daily, weekly, or HH:MM (e.g., "03:00")
+  # If frequency is "daily" or custom time, specify time in HH:MM format
+  time: "03:00"  # Only used for daily and custom time frequencies
+
 weekly_report:
   # Day of week: monday, tuesday, wednesday, thursday, friday, saturday, sunday
   day: "monday"

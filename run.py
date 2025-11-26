@@ -243,6 +243,25 @@ class BackupRotator:
             logger.error(f"Unexpected error during backup rotation: {e}")
             await self.notifier.send_general_error(str(e), "Backup rotation")
 
+    def schedule_rotation(self) -> None:
+        """Schedule backup rotation job."""
+        frequency = self.config.rotation_schedule.frequency
+        time = self.config.rotation_schedule.time
+
+        if frequency == "hourly":
+            schedule.every().hour.do(lambda: asyncio.run(self.run_once()))
+            logger.info("Scheduled backup rotation to run every hour")
+        elif frequency == "daily":
+            schedule.every().day.at(time).do(lambda: asyncio.run(self.run_once()))
+            logger.info(f"Scheduled backup rotation to run daily at {time}")
+        elif frequency == "weekly":
+            schedule.every().monday.at(time).do(lambda: asyncio.run(self.run_once()))
+            logger.info(f"Scheduled backup rotation to run weekly on Monday at {time}")
+        else:
+            # Custom time (HH:MM format)
+            schedule.every().day.at(frequency).do(lambda: asyncio.run(self.run_once()))
+            logger.info(f"Scheduled backup rotation to run daily at {frequency}")
+
     def schedule_weekly_report(self) -> None:
         """Schedule weekly report job."""
         day = self.config.weekly_report.day
@@ -270,6 +289,9 @@ class BackupRotator:
     async def run_with_scheduler(self) -> None:
         """Run with built-in scheduler."""
         logger.info("Starting backup rotator with scheduler")
+
+        # Schedule rotation
+        self.schedule_rotation()
 
         # Schedule weekly report
         self.schedule_weekly_report()

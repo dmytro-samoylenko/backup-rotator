@@ -47,6 +47,36 @@ class LoggingConfig(BaseModel):
         return v.upper()
 
 
+class RotationScheduleConfig(BaseModel):
+    """Rotation schedule configuration."""
+
+    frequency: str = Field(
+        default="daily",
+        description="Rotation frequency: hourly, daily, weekly, or HH:MM format",
+    )
+    time: str = Field(
+        default="03:00",
+        pattern=r"^\d{2}:\d{2}$",
+        description="Time for daily/custom rotations in HH:MM format",
+    )
+
+    @field_validator("frequency")
+    @classmethod
+    def validate_frequency(cls, v: str) -> str:
+        """Validate rotation frequency."""
+        valid_frequencies = ["hourly", "daily", "weekly"]
+        # Check if it's a valid frequency or a time pattern (HH:MM)
+        if v.lower() not in valid_frequencies:
+            # Check if it matches HH:MM pattern
+            import re
+
+            if not re.match(r"^\d{2}:\d{2}$", v):
+                raise ValueError(
+                    f"Invalid frequency. Must be one of: {', '.join(valid_frequencies)} or HH:MM format"
+                )
+        return v.lower() if v.lower() in valid_frequencies else v
+
+
 class WeeklyReportConfig(BaseModel):
     """Weekly report scheduling configuration."""
 
@@ -115,6 +145,9 @@ class Config(BaseModel):
     backups: BackupsConfig
     disk: DiskConfig
     logging: LoggingConfig = Field(default_factory=LoggingConfig)
+    rotation_schedule: RotationScheduleConfig = Field(
+        default_factory=RotationScheduleConfig
+    )
     weekly_report: WeeklyReportConfig
     datetime_formats: list[str] = Field(
         ..., min_length=1, description="List of datetime format patterns"

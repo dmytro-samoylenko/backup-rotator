@@ -109,6 +109,8 @@ See `config.yaml` for a complete example with comments.
 - `disk.margin_percent`: Clear alert when space rises above threshold + margin
 - `logging.directory`: Log file directory
 - `logging.level`: Log level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
+- `rotation_schedule.frequency`: How often to run rotation (`hourly`, `daily`, `weekly`, or `HH:MM` for custom time)
+- `rotation_schedule.time`: Time for daily/custom rotations (HH:MM format)
 - `weekly_report.day`: Day for weekly report (monday-sunday)
 - `weekly_report.time`: Time for weekly report (HH:MM format)
 - `datetime_formats`: List of datetime format patterns (tried in order)
