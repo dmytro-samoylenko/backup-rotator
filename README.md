@@ -31,7 +31,7 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 
 1. Clone the repository:
 ```bash
-git clone <repository-url>
+git clone https://github.com/dmytro-samoylenko/backup-rotator.git
 cd backup-rotator
 ```
 
