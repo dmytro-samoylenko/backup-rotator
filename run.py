@@ -249,17 +249,23 @@ class BackupRotator:
         time = self.config.rotation_schedule.time
 
         if frequency == "hourly":
-            schedule.every().hour.do(lambda: asyncio.run(self.run_once()))
+            schedule.every().hour.do(lambda: asyncio.create_task(self.run_once()))
             logger.info("Scheduled backup rotation to run every hour")
         elif frequency == "daily":
-            schedule.every().day.at(time).do(lambda: asyncio.run(self.run_once()))
+            schedule.every().day.at(time).do(
+                lambda: asyncio.create_task(self.run_once())
+            )
             logger.info(f"Scheduled backup rotation to run daily at {time}")
         elif frequency == "weekly":
-            schedule.every().monday.at(time).do(lambda: asyncio.run(self.run_once()))
+            schedule.every().monday.at(time).do(
+                lambda: asyncio.create_task(self.run_once())
+            )
             logger.info(f"Scheduled backup rotation to run weekly on Monday at {time}")
         else:
             # Custom time (HH:MM format)
-            schedule.every().day.at(frequency).do(lambda: asyncio.run(self.run_once()))
+            schedule.every().day.at(frequency).do(
+                lambda: asyncio.create_task(self.run_once())
+            )
             logger.info(f"Scheduled backup rotation to run daily at {frequency}")
 
     def schedule_weekly_report(self) -> None:
@@ -281,7 +287,7 @@ class BackupRotator:
         job = (
             day_mapping[day]
             .at(time)
-            .do(lambda: asyncio.run(self.send_weekly_summary()))
+            .do(lambda: asyncio.create_task(self.send_weekly_summary()))
         )
 
         logger.info(f"Scheduled weekly report for {day.capitalize()} at {time}")
